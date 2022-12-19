@@ -12,7 +12,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubunutu-latest
+    runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     steps:
       - name: Test Build
