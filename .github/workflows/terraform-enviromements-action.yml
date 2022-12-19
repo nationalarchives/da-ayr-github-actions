@@ -19,4 +19,6 @@ jobs:
         run: |
           pwd
           ls -la
+      - name: Checkout
+        uses: actions/checkout@v2
     
