@@ -1,0 +1,22 @@
+
+name: terraform-environments-action
+on:
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        required: true
+      tf_dir:
+        type: string
+        required: true
+
+jobs:
+  test:
+    runs-on: ubunutu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: Test Build
+        run: |
+          pwd
+          ls -la
+    
