@@ -9,7 +9,9 @@ on:
       tf_dir:
         type: string
         required: true
-
+    secrets:
+      AWS_ROLE:
+        required: true
 jobs:
   test:
     runs-on: ubuntu-latest
