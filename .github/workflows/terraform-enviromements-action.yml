@@ -12,6 +12,10 @@ on:
     secrets:
       AWS_ROLE:
         required: true
+      AWS_BUCKET_NAME:
+        required: true
+      AWS_BUCKET_KEY_NAME:
+        required: true
 permissions:
   id-token: write
   contents: read
