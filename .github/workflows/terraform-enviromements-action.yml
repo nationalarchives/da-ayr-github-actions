@@ -24,8 +24,8 @@ jobs:
       - name: Configre AWS credentials from AWS account
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-region: eu-west-2
           role-to-assume: ${{ secrets.AWS_ROLE }}
+          aws-region: eu-west-2
           role-session-name: Github-OIDC-TERRAFROM
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
