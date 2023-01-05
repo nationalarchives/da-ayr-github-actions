@@ -55,7 +55,7 @@ jobs:
         run: |
           pwd
           ls
-          cd terraform/environments/dev
+          cd terraform/environments/dev/
           pwd
           terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key={AWS_BUCKET_KEY_NAME}"
       - name: Terraform Validate
