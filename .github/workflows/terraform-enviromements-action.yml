@@ -60,7 +60,7 @@ jobs:
           terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key={AWS_BUCKET_KEY_NAME}"
       - name: Terraform Validate
         id: validate
-        run: terrafrom validate -no-color
+        run: terraform validate -no-color
       
       - name: Terrafrom plan
         id: plan
