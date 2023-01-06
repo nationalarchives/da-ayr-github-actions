@@ -49,6 +49,7 @@ jobs:
           cat /etc/os-release
           lsb_release -a
           hostnamectl
+          sh scripts/backend-tf.sh
       - name: Terraform fmt
         id: fmt
         run: terraform -fmt -check
