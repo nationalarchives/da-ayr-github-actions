@@ -51,7 +51,7 @@ jobs:
           lsb_release -a
           hostnamectl
           sudo apt-get install jq -y
-          cd /home/runner/work/da-ayr-terraform-infra/da-ayr-terraform-infra/terraform/environment/dev
+          cd terraform/environments/dev
           TF_VARS=$(aws ssm get-parameter --name "terraform-tfvars" --region eu-west-2 | jq .Parameter.Value | sed -r 's/["]+//g' | sed "s/'/\"/g" )
           echo $TF_VARS > terraform.tfvars
 
