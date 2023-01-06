@@ -1,0 +1,14 @@
+name: docker-build-and-ecr-deploy
+on:
+  workflow_call:
+    inputs:
+      docker_image_name:
+        type: string
+        required: true
+
+jobs:
+  build:
+    name: Build image
+    runs-on: ubuntu-latest
+
+    
