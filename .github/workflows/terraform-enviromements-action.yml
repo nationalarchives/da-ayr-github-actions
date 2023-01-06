@@ -45,13 +45,13 @@ jobs:
         run: |
           pwd
           whoami
-          ls
+          ls 
+          ls scripts
           cat /etc/os-release
           lsb_release -a
           hostnamectl
           sudo apt-get install jq -y
           cd terraform/environment/dev
-
           TF_VARS=$(aws ssm get-parameter --name "terraform-tfvars" --region eu-west-2 | jq .Parameter.Value | sed -r 's/["]+//g' | sed "s/'/\"/g" )
           echo $TF_VARS > terraform.tfvars
 
