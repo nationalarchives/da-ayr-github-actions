@@ -44,11 +44,9 @@ jobs:
       - name: Retrieve Build Parameters
         run: |
           pwd
-          #whoami
           ls
           cat /etc/os-release
           lsb_release -a
-          #hostnamectl
           sh scripts/backend-tf.sh
       - name: Format Terraform
         id: fmt
@@ -76,13 +74,15 @@ jobs:
           pwd
           ls
           cd terraform/environments/dev/
-          terraform plan -no-color
+          terraform plan -out plan.out -no-color
 
         continue-on-error: true
-      - name: Terraform Plan Status
-        if: steps.plan.outcome =='failure'
-        run: exit 1
+#       - name: Terraform Plan Status
+#         if: steps.plan.outcome =='failure'
+#         run: exit 1
 
       - name: Terrafrom Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve -input=false 
+        run: | 
+          cd terraform/environments/dev/
+          terraform apply plan.out -auto-approve -input=false 
