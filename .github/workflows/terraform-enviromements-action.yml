@@ -55,7 +55,7 @@ jobs:
         run: terraform fmt #-check
         continue-on-error: true
 
-      - name: Terraform Init
+      - name: Initialize Terraform
         id: init
         env: 
           AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
@@ -70,7 +70,7 @@ jobs:
         id: validate
         run: terraform validate -no-color
       
-      - name: Terrafrom plan
+      - name: Run Terrafrom - Plan
         id: plan
         run: |
           pwd
@@ -78,11 +78,11 @@ jobs:
           cd terraform/environments/dev/
           terraform plan -no-color
 
-#         continue-on-error: true
-#       - name: Terraform Plan Status
-#         if: steps.plan.outcome =='failure'
-#         run: exit 1
+        continue-on-error: true
+      - name: Terraform Plan Status
+        if: steps.plan.outcome =='failure'
+        run: exit 1
 
-#       - name: Terraform Apply
-#         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-#         run: terraform apply -auto-approve -input=false 
+      - name: Run Terrafrom - Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve -input=false 
