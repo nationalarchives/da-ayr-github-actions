@@ -77,11 +77,13 @@ jobs:
           terraform plan -out plan.out -no-color
 
         continue-on-error: true
-#       - name: Terraform Plan Status
-#         if: steps.plan.outcome =='failure'
-#         run: exit 1
+      - name: Terraform Plan Status
+        id: if_plan_error
+        if: steps.plan.outcome =='failure'
+        run: exit 1
 
       - name: Terrafrom Apply
+        id: apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: | 
           cd terraform/environments/dev/
