@@ -87,6 +87,7 @@ jobs:
       - name: Terraform Destroy
         id: destroy
         run: |
+          cd terraform/environments/dev/
           terraform destroy
         
 #       - name: Terraform Plan Status
