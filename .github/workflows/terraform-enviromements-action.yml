@@ -1,5 +1,5 @@
 
-name: terraform-environments-action
+name: Terraform-Deployment
 on:
   workflow_call:
     inputs:
