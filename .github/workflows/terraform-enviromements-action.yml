@@ -25,22 +25,27 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     steps:
+    
       - name: Setup Configs and Variables
         run: |
           pwd
           ls -la
-      - name: Checkout
+          
+      - name: Checkout Repo
         uses: actions/checkout@v2
-      - name: Configre AWS credentials from AWS account
+        
+      - name: Configre AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: ${{ secrets.AWS_ROLE }}
           aws-region: eu-west-2
           role-session-name: Github-OIDC-TERRAFROM
+          
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.2.5
+          
       - name: Retrieve Build Parameters
         run: |
           pwd
@@ -48,6 +53,7 @@ jobs:
           cat /etc/os-release
           lsb_release -a
           sh scripts/backend-tf.sh
+          
       - name: Format Terraform
         id: fmt
         run: terraform fmt #-check
@@ -64,6 +70,7 @@ jobs:
           cd terraform/environments/dev/
           pwd
           terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key={AWS_BUCKET_KEY_NAME}"
+          
       - name: Validate Terraform
         id: validate
         run: terraform validate -no-color
@@ -74,13 +81,14 @@ jobs:
           pwd
           ls
           cd terraform/environments/dev/
+          terraform plan
           terraform plan -out plan.out -no-color
-
-#         continue-on-error: true
-#       - name: Terraform Plan Status
-#         id: if_plan_error
-#         if: steps.plan.outcome =='failure'
-#         run: exit 1
+        continue-on-error: true
+        
+      - name: Terraform Plan Status
+        id: if_plan_error
+        if: steps.plan.outcome =='failure'
+        run: exit 1
 
       - name: Terrafrom Apply
         id: apply
