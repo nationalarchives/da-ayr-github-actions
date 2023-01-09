@@ -21,7 +21,7 @@ permissions:
   contents: read
   pull-requests: write
 jobs:
-  test:
+  Deployment-Steps:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     steps:
