@@ -87,4 +87,4 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push' || github.ref == 'refs/heads/dev' && github.event_name == 'push'
         run: | 
           cd terraform/environments/dev/
-          terraform apply plan.out -auto-approve -input=false 
+          terraform apply plan.out  # -auto-approve -input=false 
