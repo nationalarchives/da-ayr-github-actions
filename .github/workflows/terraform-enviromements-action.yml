@@ -70,13 +70,13 @@ jobs:
         id: validate
         run: terraform validate -no-color
       
-#       - name: Terrafrom plan
-#         id: plan
-#         run: |
-#           pwd
-#           ls
-#           cd terraform/environments/dev/
-#           terraform plan -no-color
+      - name: Terrafrom plan
+        id: plan
+        run: |
+          pwd
+          ls
+          cd terraform/environments/dev/
+          terraform plan -no-color
 
 #         continue-on-error: true
 #       - name: Terraform Plan Status
