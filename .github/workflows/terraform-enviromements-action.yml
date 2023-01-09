@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     steps:
-      - name: Test Build
+      - name: Setup Configs and Variables
         run: |
           pwd
           ls -la
@@ -41,18 +41,18 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.2.5
-      - name: Copy Config Script
+      - name: Retrieve Build Parameters
         run: |
           pwd
-          whoami
+          #whoami
           ls
           cat /etc/os-release
           lsb_release -a
-          hostnamectl
+          #hostnamectl
           sh scripts/backend-tf.sh
-      - name: Terraform fmt
+      - name: Format Terraform
         id: fmt
-        run: terraform -fmt -check
+        run: terraform fmt #-check
         continue-on-error: true
 
       - name: Terraform Init
@@ -66,7 +66,7 @@ jobs:
           cd terraform/environments/dev/
           pwd
           terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key={AWS_BUCKET_KEY_NAME}"
-      - name: Terraform Validate
+      - name: Validate Terraform
         id: validate
         run: terraform validate -no-color
       
