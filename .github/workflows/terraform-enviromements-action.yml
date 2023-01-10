@@ -30,7 +30,7 @@ jobs:
         run: |
           pwd
           ls -la
-          aws sts get-caller-identity
+#         aws sts get-caller-identity
           
       - name: Checkout Repo
         uses: actions/checkout@v2
