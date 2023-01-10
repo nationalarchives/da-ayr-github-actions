@@ -69,10 +69,10 @@ jobs:
         run: |
           aws sts get-caller-identity
           pwd
-          ls
           cd terraform/environments/dev/
           pwd
-          terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key={AWS_BUCKET_KEY_NAME}"
+          ls
+          terraform init -backend-config=backend-config.auto.tfvars -upgrade -reconfigure
           
       - name: Validate Terraform
         id: validate
