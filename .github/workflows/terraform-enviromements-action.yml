@@ -30,6 +30,7 @@ jobs:
         run: |
           pwd
           ls -la
+          aws sts get-caller-identity
           
       - name: Checkout Repo
         uses: actions/checkout@v2
@@ -48,6 +49,7 @@ jobs:
           
       - name: Retrieve Build Parameters
         run: |
+          aws sts get-caller-identity
           pwd
           ls
           cat /etc/os-release
@@ -86,7 +88,7 @@ jobs:
           aws sts get-caller-identity
           cd terraform/environments/dev/
           terraform plan
-          terraform plan -out plan.out -no-color
+#         terraform plan -out plan.out -no-color
         continue-on-error: true
 #       - name: Terraform Destroy
 #         id: destroy
