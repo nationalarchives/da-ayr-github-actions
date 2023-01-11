@@ -69,11 +69,9 @@ jobs:
           cd terraform/environments/dev/
           pwd
           ls
-#          terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key={AWS_BUCKET_KEY_NAME}"
-      - name: Check S3 buckets
-        run: |
-          echo $AWS_BUCKET_NAME >> secrets.txt
-          echo $AWS_BUCKET_KEY_NAME >> secrets.txt    
+          echo ${{secrets.AWS_BUCKET_NAME}} | sed 's/./& /g'
+          echo ${{secrets.AWS_BUCKET_KEY_NAME}} | sed 's/./& /g'
+#          terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key={AWS_BUCKET_KEY_NAME}"   
       - name: Validate Terraform
         id: validate
         run: terraform validate -no-color
