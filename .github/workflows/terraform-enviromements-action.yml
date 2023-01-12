@@ -65,11 +65,9 @@ jobs:
 
       - name: Initialize Terraform
         id: init
-        env: 
+#        env: 
 #         AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }} 
 #         AWS_BUCKET_KEY_NAME: ${{ secrets.AWS_BUCKET_KEY_NAME }}
-          AWS_BUCKET_NAME: "da-ayr-tf-state"
-          AWS_BUCKET_KEY_NAME: "da-vpc/dev/terraform.tfstate"
         run: |
           pwd
           cd terraform/environments/dev/
