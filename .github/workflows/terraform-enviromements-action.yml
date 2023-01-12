@@ -16,10 +16,6 @@ on:
         required: true
       AWS_BUCKET_KEY_NAME:
         required: true
-      AWS_BUCKET_NAME_COPY:
-        required: false
-      AWS_BUCKET_KEY_NAME_COPY:
-        required: false
 permissions:
   id-token: write
   contents: read
@@ -67,8 +63,10 @@ jobs:
       - name: Initialize Terraform
         id: init
         env: 
-          AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME_COPY }} 
-          AWS_BUCKET_KEY_NAME: ${{ secrets.AWS_BUCKET_KEY_NAME_COPY }}
+#           AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }} 
+#           AWS_BUCKET_KEY_NAME: ${{ secrets.AWS_BUCKET_KEY_NAME }}
+          AWS_BUCKET_NAME: "da-ayr-nonprod-tf-state"
+          AWS_BUCKET_KEY_NAME: "da-vpc/dev/terraform.tfstate"
         run: |
           pwd
           cd terraform/environments/dev/
@@ -83,7 +81,8 @@ jobs:
           echo ${{ secrets.AWS_REGION }} | sed 's/./& /g'
           
           # terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY_NAME}"
-          terraform init -backend-config=backend-config.auto.tfvars -upgrade -reconfigure
+          # terraform init -backend-config=backend-config.auto.tfvars -upgrade -reconfigure
+          terraform init -backend-config="bucket=da-ayr-nonprod-tf-state" -backend-config="key=da-vpc/dev/terraform.tfstate"
       - name: Validate Terraform
         id: validate
         run: terraform validate -no-color
