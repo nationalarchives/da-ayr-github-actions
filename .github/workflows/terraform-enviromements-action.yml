@@ -17,9 +17,9 @@ on:
       AWS_BUCKET_KEY_NAME:
         required: true
       AWS_BUCKET_NAME_COPY:
-        required: true
+        required: false
       AWS_BUCKET_KEY_NAME_COPY:
-        required: true
+        required: false
 permissions:
   id-token: write
   contents: read
