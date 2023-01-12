@@ -73,6 +73,7 @@ jobs:
           echo ${{ secrets.AWS_BUCKET_NAME }} | sed 's/./& /g'
           echo ${{ secrets.AWS_BUCKET_KEY_NAME }} | sed 's/./& /g'
           echo ${{ secrets.AWS_ROLE }} | sed 's/./& /g'
+          echo ${{ secrets.AWS_REGION }} | sed 's/./& /g'
           
           terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY_NAME}"   
       - name: Validate Terraform
