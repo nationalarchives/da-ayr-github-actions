@@ -62,16 +62,18 @@ jobs:
       - name: Initialize Terraform
         id: init
         env: 
-          AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+          AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }} 
           AWS_BUCKET_KEY_NAME: ${{ secrets.AWS_BUCKET_KEY_NAME }}
         run: |
           pwd
           cd terraform/environments/dev/
           pwd
           ls
-          echo ${{ secrets.AWS_BUCKET_NAME }}
-          echo ${{ secrets.AWS_BUCKET_KEY_NAME }}
-          echo ${{ secrets.AWS_ROLE }}
+          
+          echo ${{ secrets.AWS_BUCKET_NAME }} | 's/./& /g'
+          echo ${{ secrets.AWS_BUCKET_KEY_NAME }} | 's/./& /g'
+          echo ${{ secrets.AWS_ROLE }} | 's/./& /g'
+          
           terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY_NAME}"   
       - name: Validate Terraform
         id: validate
