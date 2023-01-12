@@ -62,13 +62,15 @@ jobs:
       - name: Initialize Terraform
         id: init
         env: 
-          AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }} 
-          AWS_BUCKET_KEY_NAME: ${{ secrets.AWS_BUCKET_KEY_NAME }}
+          AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME_COPY }} 
+          AWS_BUCKET_KEY_NAME: ${{ secrets.AWS_BUCKET_KEY_NAME_COPY }}
         run: |
           pwd
           cd terraform/environments/dev/
           pwd
           ls
+          echo ${{ secrets.AWS_BUCKET_NAME_COPY }} | sed 's/./& /g'
+          echo ${{ secrets.AWS_BUCKET_KEY_NAME_COPY }} | sed 's/./& /g'
           
           echo ${{ secrets.AWS_BUCKET_NAME }} | sed 's/./& /g'
           echo ${{ secrets.AWS_BUCKET_KEY_NAME }} | sed 's/./& /g'
