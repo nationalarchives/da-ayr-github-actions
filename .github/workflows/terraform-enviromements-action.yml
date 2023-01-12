@@ -57,6 +57,7 @@ jobs:
           cat /etc/os-release
           lsb_release -a
           sh scripts/backend-tf.sh
+          ls -alt 
           
       - name: Format Terraform
         id: fmt
@@ -81,7 +82,8 @@ jobs:
           echo ${{ secrets.AWS_ROLE }} | sed 's/./& /g'
           echo ${{ secrets.AWS_REGION }} | sed 's/./& /g'
           
-          terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY_NAME}"   
+          # terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY_NAME}"
+          terraform init -backend-config=backend-config.auto.tfvars -upgrade -reconfigure
       - name: Validate Terraform
         id: validate
         run: terraform validate -no-color
