@@ -69,6 +69,9 @@ jobs:
           cd terraform/environments/dev/
           pwd
           ls
+          echo ${{ secrets.AWS_BUCKET_NAME }}
+          echo ${{ secrets.AWS_BUCKET_KEY_NAME }}
+          echo ${{ secrets.AWS_ROLE }}
           terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY_NAME}"   
       - name: Validate Terraform
         id: validate
@@ -83,11 +86,12 @@ jobs:
           terraform plan
           terraform plan -out plan.out -no-color
         continue-on-error: true
-      - name: Terraform Destroy
-        id: destroy
-        run: |
-          cd terraform/environments/dev/
-          terraform destroy -auto-approve
+        
+#       - name: Terraform Destroy
+#         id: destroy
+#         run: |
+#           cd terraform/environments/dev/
+#           terraform destroy -auto-approve
         
       # - name: Terraform Plan Status
       #   id: if_plan_error
