@@ -54,6 +54,9 @@ jobs:
           lsb_release -a
           sh scripts/backend-tf.sh
           ls -alt 
+          cp backend-config.auto.tfvars terraform/environments/dev
+          cp terraform.tfvars terraform/environments/dev
+          ls -alt
           
       - name: Format Terraform
         id: fmt
