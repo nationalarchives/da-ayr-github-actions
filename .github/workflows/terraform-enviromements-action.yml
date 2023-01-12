@@ -73,9 +73,9 @@ jobs:
           pwd
           ls
           
-          terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY_NAME}"
+          #terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY_NAME}"
           #terraform init -backend-config=backend-config.auto.tfvars -upgrade -reconfigure
-          # terraform init -backend-config="bucket=da-ayr-tf-state" -backend-config="key=da-vpc/dev/terraform.tfstate"
+          terraform init -backend-config="bucket=da-ayr-tf-state" -backend-config="key=da-vpc/dev/terraform.tfstate"
       - name: Validate Terraform
         id: validate
         run: terraform validate -no-color
