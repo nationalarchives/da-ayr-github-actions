@@ -4,11 +4,105 @@ on:
     inputs:
       docker_image_name:
         type: string
+        required: false
+    secrets:
+      AWS_ROLE:
+        required: true
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      ECR_REPOSITORY:
+        required: true
+      AWS_REGISTRIES:
+        required: true
+      ECR_Account:
+        required: true
+      AWS_REGION:
+        required: true
+      ENV_VARS:
+        required: true
+      SECRET_KEY:
+        required: true
+      WEBAPP_DB_PASSWORD:
+        required: true
+      OIDC_RP_CLIENT_SECRET:
         required: true
 
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+  repository-projects: write
 jobs:
   build:
-    name: Build image
     runs-on: ubuntu-latest
-
     
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Configure AWS Credential
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+          role-to-assume: ${{ secrets.AWS_ROLE }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-session-name: role-session-name-${{ github.actor }}-${{ github.triggering_actor }}
+    - name: Login To Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+      with:
+        registries: ${{ secrets.AWS_REGISTRIES }}
+    - name: Make envfile
+      uses: SpicyPizza/create-envfile@v1.3
+      with:
+        envkey_DEBUG: false
+        envkey_SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        envkey_WEBAPP_DB_PASSWORD: ${{ secrets.WEBAPP_DB_PASSWORD }}
+        envkey_KEYCLOACK_BASE_URI: http://kubernetes.docker.internal:8080
+        envkey_KEYCLOACK_DB_NAME: keycloack
+        envkey_KEYCLOACK_DB_USER: keycloack
+        envkey_WEBAPP_DB_NAME: django
+        envkey_WEBAPP_DB_USER: django
+        envkey_KEYCLOACK_REALM_NAME: AYR
+        envkey_OIDC_RP_CLIENT_ID: webapp
+        envkey_OIDC_RP_CLIENT_SECRET: ${{ secrets.OIDC_RP_CLIENT_SECRET }}
+        some_other_variable: foobar
+        directory: .
+        file_name: .env
+        fail_on_empty: false
+
+    - name: Build Test Image
+      id: test-image
+      env:
+        IMAGE_TAG: da_ayr_test
+      run: |  
+        docker build --target=test -t $IMAGE_TAG . 
+    - name: Run Unit Tests
+      id: unit-tests
+      env:
+        IMAGE_TAG: da_ayr_test
+      run: |
+        docker run --env-file .env --rm $IMAGE_TAG pytest -s
+    - name: Run Flake 8
+      id: flake-8
+      env:
+        IMAGE_TAG: da_ayr_test
+      run: |
+        docker run --env-file .env --rm $IMAGE_TAG flake8 app project tests
+    
+    - name: Automatic Tagging of Releasees 
+      id: increament-get-tag
+      run: |
+        bash ./git_update.sh -v patch
+    - name: Build, Tag and Push the Image to Amazon ECR
+      id: deploy-image
+      env:
+        ECR_REGISTRY: ${{ secrets.ECR_Account }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+        ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+        IMAGE_VERSION: ${{ steps.increament-get-tag.outputs.get-tag }}
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest --target=release .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+        
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_VERSION --target=release .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_VERSION
