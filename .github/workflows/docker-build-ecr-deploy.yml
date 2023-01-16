@@ -20,14 +20,27 @@ on:
         required: true
       AWS_REGION:
         required: true
-      ENV_VARS:
-        required: true
       SECRET_KEY:
         required: true
       WEBAPP_DB_PASSWORD:
         required: true
       OIDC_RP_CLIENT_SECRET:
         required: true
+      WEBAPP_DB_HOST:
+        required: true
+      WEBAPP_DEBUG:
+        required: true
+      KEYCLOACK_BASE_URI:
+        required: true
+      KEYCLOACK_DB_NAME:
+        required: true
+      KEYCLOACK_DB_USER:
+        required: true
+      WEBAPP_DB_NAME:
+        required: true
+      WEBAPP_DB_USER:
+        required: true 
+      
 
 permissions:
   id-token: write
@@ -58,14 +71,16 @@ jobs:
         envkey_DEBUG: false
         envkey_SECRET_KEY: ${{ secrets.SECRET_KEY }}
         envkey_WEBAPP_DB_PASSWORD: ${{ secrets.WEBAPP_DB_PASSWORD }}
-        envkey_KEYCLOACK_BASE_URI: http://kubernetes.docker.internal:8080
-        envkey_KEYCLOACK_DB_NAME: keycloack
-        envkey_KEYCLOACK_DB_USER: keycloack
-        envkey_WEBAPP_DB_NAME: django
-        envkey_WEBAPP_DB_USER: django
+        envkey_KEYCLOACK_BASE_URI: ${{ secrets.KEYCLOACK_BASE_URI }}
+        envkey_KEYCLOACK_DB_NAME: ${{ secrets.KEYCLOACK_DB_NAME }}
+        envkey_KEYCLOACK_DB_USER: ${{ secrets.KEYCLOACK_DB_USER }}
+        envkey_WEBAPP_DB_NAME: ${{ secrets.WEBAPP_DB_NAME }}
+        envkey_WEBAPP_DB_USER: ${{ secrets.WEBAPP_DB_USER }}
+        envkey_WEBAPP_DB_HOST: ${{ secrets.WEBAPP_DB_HOST }}
         envkey_KEYCLOACK_REALM_NAME: AYR
         envkey_OIDC_RP_CLIENT_ID: webapp
         envkey_OIDC_RP_CLIENT_SECRET: ${{ secrets.OIDC_RP_CLIENT_SECRET }}
+        envkey_WEBAPP_DEBUG: ${{ secrets.WEBAPP_DEBUG }}
         some_other_variable: foobar
         directory: .
         file_name: .env
