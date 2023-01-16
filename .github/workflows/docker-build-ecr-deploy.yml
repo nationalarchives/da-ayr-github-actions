@@ -40,7 +40,6 @@ on:
         required: true
       WEBAPP_DB_USER:
         required: true 
-      
 
 permissions:
   id-token: write
