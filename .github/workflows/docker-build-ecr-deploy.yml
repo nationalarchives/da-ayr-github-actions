@@ -16,7 +16,7 @@ on:
         required: true
       AWS_REGISTRIES:
         required: true
-      ECR_Account:
+      ECR_ACCOUNT:
         required: true
       AWS_REGION:
         required: true
@@ -111,7 +111,7 @@ jobs:
     - name: Build, Tag and Push the Image to Amazon ECR
       id: deploy-image
       env:
-        ECR_REGISTRY: ${{ secrets.ECR_Account }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+        ECR_REGISTRY: ${{ secrets.ECR_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
         ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
         IMAGE_VERSION: ${{ steps.increament-get-tag.outputs.get-tag }}
       run: |
