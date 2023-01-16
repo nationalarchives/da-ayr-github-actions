@@ -16,11 +16,9 @@ on:
         required: true
       AWS_REGISTRIES:
         required: true
-      ECR_Account:
+      ECR_ACCOUNT:
         required: true
       AWS_REGION:
-        required: true
-      ENV_VARS:
         required: true
       SECRET_KEY:
         required: true
@@ -28,7 +26,20 @@ on:
         required: true
       OIDC_RP_CLIENT_SECRET:
         required: true
-
+      WEBAPP_DB_HOST:
+        required: true
+      WEBAPP_DEBUG:
+        required: true
+      KEYCLOACK_BASE_URI:
+        required: true
+      KEYCLOACK_DB_NAME:
+        required: true
+      KEYCLOACK_DB_USER:
+        required: true
+      WEBAPP_DB_NAME:
+        required: true
+      WEBAPP_DB_USER:
+        required: true 
 permissions:
   id-token: write
   contents: read
@@ -36,8 +47,7 @@ permissions:
   repository-projects: write
 jobs:
   build:
-    runs-on: ubuntu-latest
-    
+    runs-on: ubuntu-latest 
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -58,19 +68,20 @@ jobs:
         envkey_DEBUG: false
         envkey_SECRET_KEY: ${{ secrets.SECRET_KEY }}
         envkey_WEBAPP_DB_PASSWORD: ${{ secrets.WEBAPP_DB_PASSWORD }}
-        envkey_KEYCLOACK_BASE_URI: http://kubernetes.docker.internal:8080
-        envkey_KEYCLOACK_DB_NAME: keycloack
-        envkey_KEYCLOACK_DB_USER: keycloack
-        envkey_WEBAPP_DB_NAME: django
-        envkey_WEBAPP_DB_USER: django
+        envkey_KEYCLOACK_BASE_URI: ${{ secrets.KEYCLOACK_BASE_URI }}
+        envkey_KEYCLOACK_DB_NAME: ${{ secrets.KEYCLOACK_DB_NAME }}
+        envkey_KEYCLOACK_DB_USER: ${{ secrets.KEYCLOACK_DB_USER }}
+        envkey_WEBAPP_DB_NAME: ${{ secrets.WEBAPP_DB_NAME }}
+        envkey_WEBAPP_DB_USER: ${{ secrets.WEBAPP_DB_USER }}
+        envkey_WEBAPP_DB_HOST: ${{ secrets.WEBAPP_DB_HOST }}
         envkey_KEYCLOACK_REALM_NAME: AYR
         envkey_OIDC_RP_CLIENT_ID: webapp
         envkey_OIDC_RP_CLIENT_SECRET: ${{ secrets.OIDC_RP_CLIENT_SECRET }}
+        envkey_WEBAPP_DEBUG: ${{ secrets.WEBAPP_DEBUG }}
         some_other_variable: foobar
         directory: .
         file_name: .env
         fail_on_empty: false
-
     - name: Build Test Image
       id: test-image
       env:
@@ -88,8 +99,7 @@ jobs:
       env:
         IMAGE_TAG: da_ayr_test
       run: |
-        docker run --env-file .env --rm $IMAGE_TAG flake8 app project tests
-    
+        docker run --env-file .env --rm $IMAGE_TAG flake8 app project tests    
     - name: Automatic Tagging of Releasees 
       id: increament-get-tag
       run: |
@@ -97,7 +107,7 @@ jobs:
     - name: Build, Tag and Push the Image to Amazon ECR
       id: deploy-image
       env:
-        ECR_REGISTRY: ${{ secrets.ECR_Account }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+        ECR_REGISTRY: ${{ secrets.ECR_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
         ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
         IMAGE_VERSION: ${{ steps.increament-get-tag.outputs.get-tag }}
       run: |
