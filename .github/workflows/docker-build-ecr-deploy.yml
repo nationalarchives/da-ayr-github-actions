@@ -40,7 +40,6 @@ on:
         required: true
       WEBAPP_DB_USER:
         required: true 
-
 permissions:
   id-token: write
   contents: read
@@ -48,8 +47,7 @@ permissions:
   repository-projects: write
 jobs:
   build:
-    runs-on: ubuntu-latest
-    
+    runs-on: ubuntu-latest 
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -84,7 +82,6 @@ jobs:
         directory: .
         file_name: .env
         fail_on_empty: false
-
     - name: Build Test Image
       id: test-image
       env:
@@ -102,8 +99,7 @@ jobs:
       env:
         IMAGE_TAG: da_ayr_test
       run: |
-        docker run --env-file .env --rm $IMAGE_TAG flake8 app project tests
-    
+        docker run --env-file .env --rm $IMAGE_TAG flake8 app project tests    
     - name: Automatic Tagging of Releasees 
       id: increament-get-tag
       run: |
