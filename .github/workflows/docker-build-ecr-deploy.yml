@@ -143,6 +143,7 @@ jobs:
         aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
         aws-session-token: ${{ env.AWS_SESSION_TOKEN }}
         role-skip-session-tagging: true
+        role-duration-seconds: 1200
     - name: Deploy Image to ECS 
       id: ec-deploy-image
       env:
