@@ -91,11 +91,11 @@ jobs:
           terraform plan -out plan.out -no-color
         continue-on-error: true
         
-      - name: Terraform Destroy
-        id: destroy
-        run: |
-          cd terraform/environments/dev/
-          terraform destroy -auto-approve -lock=false
+#       - name: Terraform Destroy
+#         id: destroy
+#         run: |
+#           cd terraform/environments/dev/
+#           terraform destroy -auto-approve -lock=false
         
 #       - name: Terraform Plan Status
 #         id: if_plan_error
