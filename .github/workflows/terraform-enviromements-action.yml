@@ -95,7 +95,7 @@ jobs:
         id: destroy
         run: |
           cd terraform/environments/dev/
-          terraform destroy -auto-approve
+          terraform destroy -auto-approve -lock=false
         
 #       - name: Terraform Plan Status
 #         id: if_plan_error
