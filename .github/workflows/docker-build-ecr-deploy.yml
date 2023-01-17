@@ -153,8 +153,7 @@ jobs:
         IMAGE_VERSION: ${{ steps.increament-get-tag.outputs.get-tag }}
       run: |
         aws s3 ls
-        aws ecs list-clusters
-        # TASK=$(aws ecs list-tasks --cluster ecs-cluster-dev --output text)
+        echo aws ecs list-tasks --cluster ecs-cluster-dev --output text >> $TASK
         echo $TASK
-        aws ecs stop-task --cluster ecs-cluster-dev --task $TASK
+
   #     bash ./ecs_deploy.sh
