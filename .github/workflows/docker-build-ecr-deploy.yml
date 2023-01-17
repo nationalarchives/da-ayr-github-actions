@@ -154,4 +154,6 @@ jobs:
       run: |
         aws s3 ls
         aws ecs list-clusters
+        TASK=$(aws ecs list-tasks --cluster ecs-cluster-dev --output text)
+        echo $TASK
   #     bash ./ecs_deploy.sh
