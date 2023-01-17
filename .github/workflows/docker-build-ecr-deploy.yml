@@ -40,6 +40,8 @@ on:
         required: true
       WEBAPP_DB_USER:
         required: true 
+      AWS_ECR_AND_ECR_ROLE_ARN:
+        required: true 
 permissions:
   id-token: write
   contents: read
@@ -131,6 +133,15 @@ jobs:
     #   run: |
     #     docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest --target=release .
     #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+    - name: Non Prod Role
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ secrets.AWS_ECR_AND_ECR_ROLE_ARN }}
+        aws-region: ${{ secrets.AWS_REGION }}
+        role-session-name: role-session-name-${{ github.actor }}-${{ github.triggering_actor }}
+        aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+        aws-session-token: ${{ env.AWS_SESSION_TOKEN }}
     - name: Deploy Image to ECS 
       id: ec-deploy-image
       env:
