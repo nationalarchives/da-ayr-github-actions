@@ -117,8 +117,7 @@ jobs:
           IMAGE_VERSION: ${{ steps.increament-get-tag.outputs.get-tag }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest --target=release .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-    
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest   
       - name: Deploy Image to ECS 
         id: ec-deploy-image
         env:
