@@ -139,4 +139,5 @@ jobs:
         ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
         IMAGE_VERSION: ${{ steps.increament-get-tag.outputs.get-tag }}
       run: |
+        aws s3 ls
         bash ./ecs_deploy.sh
