@@ -122,15 +122,15 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v1
       with:
         registries: ${{ secrets.AWS_REGISTRIES }}
-    - name: Build, Tag and Push the Image to Amazon ECR
-      id: deploy-image
-      env:
-        ECR_REGISTRY: ${{ secrets.ECR_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-        ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
-        IMAGE_VERSION: ${{ steps.increament-get-tag.outputs.get-tag }}
-      run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest --target=release .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+    # - name: Build, Tag and Push the Image to Amazon ECR
+    #   id: deploy-image
+    #   env:
+    #     ECR_REGISTRY: ${{ secrets.ECR_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+    #     ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+    #     IMAGE_VERSION: ${{ steps.increament-get-tag.outputs.get-tag }}
+    #   run: |
+    #     docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest --target=release .
+    #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
     - name: Deploy Image to ECS 
       id: ec-deploy-image
       env:
