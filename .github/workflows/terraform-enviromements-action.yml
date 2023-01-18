@@ -87,8 +87,8 @@ jobs:
           pwd
           ls
           cd terraform/environments/dev/
-          terraform plan
-          terraform plan -out plan.out -no-color
+          terraform plan -lock=false
+          terraform plan -out plan.out -no-color -lock=false
         continue-on-error: true
         
 #       - name: Terraform Destroy
