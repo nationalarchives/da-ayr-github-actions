@@ -108,4 +108,4 @@ jobs:
         run: | 
           aws sts get-caller-identity
           cd terraform/environments/dev/
-          terraform apply plan.out -lock=false # -auto-approve -input=false
+          terraform apply -lock=false # -auto-approve -input=false
