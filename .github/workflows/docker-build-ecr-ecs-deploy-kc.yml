@@ -14,6 +14,8 @@ on:
         required: true
       AWS_ROLE:
         required: true
+      PASSPHRASE:
+        required: true
 permissions:
   id-token: write
   contents: read
@@ -36,6 +38,13 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v1
       with:
         registries: ${{ secrets.AWS_REGISTRIES }}
+    - name: Dycrypt file
+      run: gpg --quiet --batch --yes --decrypt --passphrase="$PASSPHRASE" ./ayr-realm.json ayr-realm.json.gpg
+      env:
+        PASSPHRASE: ${{ secrets.PASSPHRASE }}
+    - name: Print our json file
+      run: |
+        cat ./ayr-realm.json
     - name: Build, Tag and Push the Image to Amazon ECR
       id: deploy-image
       env:
