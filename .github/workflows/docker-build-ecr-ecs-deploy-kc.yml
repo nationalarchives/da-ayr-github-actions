@@ -39,7 +39,8 @@ jobs:
       with:
         registries: ${{ secrets.AWS_REGISTRIES }}
     - name: Dycrypt file
-      run: gpg --quiet --batch --yes --decrypt --passphrase="$PASSPHRASE" ./ayr-realm.json ayr-realm.json.gpg
+      run: |
+        gpg --quiet --batch --yes --decrypt --passphrase="$PASSPHRASE" .ayr-realm.json ayr-realm.json.gpg
       env:
         PASSPHRASE: ${{ secrets.PASSPHRASE }}
     - name: Print our json file
