@@ -16,6 +16,8 @@ on:
         required: true
       PASSPHRASE:
         required: true
+      PAT_TOKEN:
+        required: true
 permissions:
   id-token: write
   contents: read
@@ -49,12 +51,16 @@ jobs:
         aws-session-token: ${{ env.AWS_SESSION_TOKEN }}
         role-skip-session-tagging: true
         role-duration-seconds: 1200
-    - name: Copy files from s3 bucket 
-      run: |
-        aws s3 cp s3://da-ayr-realm/ayr-realm.json .
-        pwd
-        ls
-
+    # - name: Copy files from s3 bucket 
+    #   run: |
+    #     aws s3 cp s3://da-ayr-realm/ayr-realm.json .
+    #     pwd
+    #     ls
+    - name: get file
+      env:
+        TOKEN: ${{ secrets.PAT_TOKEN }}
+      run: | 
+        curl -H "Authorization: token ${TOKEN}" https://github.com/nationalarchives/da-ayr-configurations/tree/main/keycloack/ayr-realm.json
     # - name: Build, Tag and Push the Image to Amazon ECR
     #   id: deploy-image
     #   env:
