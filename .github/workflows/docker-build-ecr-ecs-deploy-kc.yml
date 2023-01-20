@@ -60,7 +60,8 @@ jobs:
       env:
         TOKEN: ${{ secrets.PAT_TOKEN }}
       run: | 
-        curl -H "Authorization: token ${TOKEN}" https://github.com/nationalarchives/da-ayr-configurations/tree/main/keycloack/ayr-realm.json
+        curl -o ayr-realm.json https://github.com/nationalarchives/da-ayr-configurations/tree/main/keycloack/ayr-realm.json
+
     - name: List files
       run: |
         pwd
