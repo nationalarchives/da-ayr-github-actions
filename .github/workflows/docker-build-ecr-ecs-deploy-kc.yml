@@ -40,7 +40,7 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v1
       with:
         registries: ${{ secrets.AWS_REGISTRIES }}
-    - name: Retrieve file from S3 bucket 
+    - name: Login in to Non Prod Account
       uses: aws-actions/configure-aws-credentials@v1
       with:
         role-to-assume: ${{ secrets.AWS_ECR_AND_ECS_ROLE_ARN }}
