@@ -88,20 +88,20 @@ jobs:
           ls
           cd terraform/environments/dev/
           terraform plan -lock=false
-          terraform plan -out plan.out -no-color -lock=false
+          terraform plan -lock=false -out plan.out -no-color 
         continue-on-error: true
         
-      - name: Terraform Destroy
-        id: destroy
-        run: |
-           cd terraform/environments/dev/
-            terraform plan -lock=false -destroy -out destroy.out
-#           terraform destroy -auto-approve -lock=false
+#       - name: Terraform Destroy
+#         id: destroy
+#         run: |
+#            cd terraform/environments/dev/
+#             terraform plan -lock=false -destroy -out destroy.out
+#            terraform destroy -auto-approve -lock=false
         
-#       - name: Terraform Plan Status
-#         id: if_plan_error
-#         if: steps.plan.outcome =='failure'
-#         run: exit 1
+      - name: Terraform Plan Status
+        id: if_plan_error
+        if: steps.plan.outcome =='failure'
+        run: exit 1
 
 #       - name: Terrafrom Apply
 #         id: apply
