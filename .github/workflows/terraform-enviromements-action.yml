@@ -95,17 +95,18 @@ jobs:
 #         id: destroy
 #         run: |
 #           cd terraform/environments/dev/
+            terraform plan -destroy -out destroy.out
 #           terraform destroy -auto-approve -lock=false
         
-      - name: Terraform Plan Status
-        id: if_plan_error
-        if: steps.plan.outcome =='failure'
-        run: exit 1
+#       - name: Terraform Plan Status
+#         id: if_plan_error
+#         if: steps.plan.outcome =='failure'
+#         run: exit 1
 
-      - name: Terrafrom Apply
-        id: apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push' || github.ref == 'refs/heads/dev' && github.event_name == 'push'
-        run: | 
-          aws sts get-caller-identity
-          cd terraform/environments/dev/
-          terraform apply -lock=false -auto-approve -input=false
+#       - name: Terrafrom Apply
+#         id: apply
+#         if: github.ref == 'refs/heads/main' && github.event_name == 'push' || github.ref == 'refs/heads/dev' && github.event_name == 'push'
+#         run: | 
+#           aws sts get-caller-identity
+#           cd terraform/environments/dev/
+#           terraform apply -lock=false -auto-approve -input=false
