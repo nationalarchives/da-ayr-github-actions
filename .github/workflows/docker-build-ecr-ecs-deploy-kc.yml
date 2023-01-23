@@ -56,21 +56,76 @@ jobs:
         TOKEN: ${{ secrets.PAT_TOKEN }}
       run: | 
         curl -o ayr-realm.json https://github.com/nationalarchives/da-ayr-configurations/tree/main/keycloack/ayr-realm.json
-    - name: Build, Tag and Push the Image to Amazon ECR
-      id: deploy-image
-      env:
-        ECR_REGISTRY: ${{ secrets.AWS_NONPROD_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-        ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPO }}
-        IMAGE_VERSION: ${{ steps.increament-get-tag.outputs.get-tag }}
+    - name: Check files in current directory
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-    - name: Deploy Image to ECS 
-      id: ec-deploy-image
-      env:
-        ECS_CLUSTER: ecs-cluster-dev
-        ECR_REGISTRY: ${{ secrets.AWS_NONPROD_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-        ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPO }}
-        IMAGE_VERSION: ${{ steps.increament-get-tag.outputs.get-tag }}
-      run: |
-        bash ./ecs_deploy.sh
+        pwd
+        ls | grep ayr-realm.json
+    # - name: Build, Tag and Push the Image to Amazon ECR
+    #   id: deploy-image
+    #   env:
+    #     ECR_REGISTRY: ${{ secrets.AWS_NONPROD_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+    #     ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPO }}
+    #     IMAGE_VERSION: ${{ steps.increament-get-tag.outputs.get-tag }}
+    #   run: |
+    #     docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+    #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+    # - name: Deploy Image to ECS 
+    #   id: ec-deploy-image
+    #   env:
+    #     ECS_CLUSTER: ecs-cluster-dev
+    #     ECR_REGISTRY: ${{ secrets.AWS_NONPROD_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+    #     ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPO }}
+    #     IMAGE_VERSION: ${{ steps.increament-get-tag.outputs.get-tag }}
+    #   run: |
+    #     bash ./ecs_deploy.sh
+# jobs:
+#   build-and-deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - name: Checkout
+#       uses: actions/checkout@v2
+#     - name: Configure AWS Credential
+#       uses: aws-actions/configure-aws-credentials@v1
+#       with:
+#           role-to-assume: ${{ secrets.AWS_ROLE }}
+#           aws-region: ${{ secrets.AWS_REGION }}
+#           role-session-name: role-session-name-${{ github.actor }}-${{ github.triggering_actor }}
+#     - name: Login To Amazon ECR
+#       id: login-ecr
+#       uses: aws-actions/amazon-ecr-login@v1
+#       with:
+#         registries: ${{ secrets.AWS_REGISTRIES }}
+#     - name: Login in to Non Prod Account
+#       uses: aws-actions/configure-aws-credentials@v1
+#       with:
+#         role-to-assume: ${{ secrets.AWS_ECR_AND_ECS_ROLE_ARN }}
+#         aws-region: ${{ secrets.AWS_REGION }}
+#         role-session-name: role-session-name-${{ github.actor }}-${{ github.triggering_actor }}
+#         aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+#         aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+#         aws-session-token: ${{ env.AWS_SESSION_TOKEN }}
+#         role-skip-session-tagging: true
+#         role-duration-seconds: 1200
+#     - name: Retrieve Realm Json Fie
+#       env:
+#         TOKEN: ${{ secrets.PAT_TOKEN }}
+#       run: | 
+#         curl -o ayr-realm.json https://github.com/nationalarchives/da-ayr-configurations/tree/main/keycloack/ayr-realm.json
+#     - name: Build, Tag and Push the Image to Amazon ECR
+#       id: deploy-image
+#       env:
+#         ECR_REGISTRY: ${{ secrets.AWS_NONPROD_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+#         ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPO }}
+#         IMAGE_VERSION: ${{ steps.increament-get-tag.outputs.get-tag }}
+#       run: |
+#         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+#         docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+#     - name: Deploy Image to ECS 
+#       id: ec-deploy-image
+#       env:
+#         ECS_CLUSTER: ecs-cluster-dev
+#         ECR_REGISTRY: ${{ secrets.AWS_NONPROD_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+#         ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPO }}
+#         IMAGE_VERSION: ${{ steps.increament-get-tag.outputs.get-tag }}
+#       run: |
+#         bash ./ecs_deploy.sh
