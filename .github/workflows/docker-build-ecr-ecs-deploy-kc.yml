@@ -60,7 +60,7 @@ jobs:
       run: |
         pwd
         ls | grep ayr-realm.json
-        cat 
+        cat ayr-realm.json
     # - name: Build, Tag and Push the Image to Amazon ECR
     #   id: deploy-image
     #   env:
