@@ -61,24 +61,24 @@ jobs:
         pwd
         ls | grep ayr-realm.json
         cat ayr-realm.json
-    # - name: Build, Tag and Push the Image to Amazon ECR
-    #   id: deploy-image
-    #   env:
-    #     ECR_REGISTRY: ${{ secrets.AWS_NONPROD_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-    #     ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPO }}
-    #     IMAGE_VERSION: ${{ steps.increament-get-tag.outputs.get-tag }}
-    #   run: |
-    #     docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
-    #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-    # - name: Deploy Image to ECS 
-    #   id: ec-deploy-image
-    #   env:
-    #     ECS_CLUSTER: ecs-cluster-dev
-    #     ECR_REGISTRY: ${{ secrets.AWS_NONPROD_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-    #     ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPO }}
-    #     IMAGE_VERSION: ${{ steps.increament-get-tag.outputs.get-tag }}
-    #   run: |
-    #     bash ./ecs_deploy.sh
+    - name: Build, Tag and Push the Image to Amazon ECR
+      id: deploy-image
+      env:
+        ECR_REGISTRY: ${{ secrets.AWS_NONPROD_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+        ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPO }}
+        IMAGE_VERSION: ${{ steps.increament-get-tag.outputs.get-tag }}
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+    - name: Deploy Image to ECS 
+      id: ec-deploy-image
+      env:
+        ECS_CLUSTER: ecs-cluster-dev
+        ECR_REGISTRY: ${{ secrets.AWS_NONPROD_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+        ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPO }}
+        IMAGE_VERSION: ${{ steps.increament-get-tag.outputs.get-tag }}
+      run: |
+        bash ./ecs_deploy.sh
 # jobs:
 #   build-and-deploy:
 #     runs-on: ubuntu-latest
