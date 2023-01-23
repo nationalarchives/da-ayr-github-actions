@@ -55,13 +55,12 @@ jobs:
       env:
         TOKEN: ${{ secrets.PAT_TOKEN }}
       run: | 
-        curl -H "Authorization: token ${TOKEN}" https://raw.githubusercontent.com/nationalarchives/da-ayr-configurations/main/keycloack/ayr-realm.json 
-          
-    - name: Check files in current directory
-      run: |
-        pwd
-        ls | grep ayr-realm.json
-        cat 
+        curl -H "Authorization: token ${TOKEN}" -o ayr-realm.json https://raw.githubusercontent.com/nationalarchives/da-ayr-configurations/main/keycloack/ayr-realm.json 
+    # - name: Check files in current directory
+    #   run: |
+    #     pwd
+    #     ls | grep ayr-realm.json
+    #     cat 
     # - name: Build, Tag and Push the Image to Amazon ECR
     #   id: deploy-image
     #   env:
