@@ -164,17 +164,13 @@ jobs:
     #     service: ${{ env.ECS_SERVICE }}
     #     cluster: ${{ env.ECS_CLUSTER }}
     #     wait-for-service-stability: true
-    - name: Extract version from package.json
-      uses: sergeysova/jq-action@v2
-      id: version
-      with:
-        cmd: 'jq .version package.json -r'
     - name: Deploy Image to ECS 
       id: ec-deploy-image
       env:
         CLUSTER_NAME: ecs-cluster-dev
         SERVICE_NAME: dev-ecs-service
       run: |
+        npm install jquery
         TASK_DEFINITION=`aws ecs describe-services --cluster $CLUSTER_NAME --services $SERVICE_NAME --query "services[].taskDefinition" --output text`
         NEW_TASK_DEF=$(echo $TASK_DEFINITION | jq --arg IMAGE "image:tag" '.taskDefinition | .containerDefinitions[0].image = $IMAGE | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)')
         aws ecs update-service --cluster $CLUSTER_NAME --service $SERVICE_NAME --task-definition $NEW_TASK_DEF
