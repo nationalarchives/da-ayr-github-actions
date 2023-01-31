@@ -155,9 +155,5 @@ jobs:
         CLUSTER_NAME: ${{ secrets.CLUSTER_NAME }}
         SERVICE_NAME: ${{ secrets.SERVICE_NAME }}
       run: |
-        NEW_TASK="(aws ecs update-service --force-new-deployment --service $SERVICE_NAME --cluster $CLUSTER_NAME)"
-        if NEW_TASK; then
-          echo "New service is up and running"
-        else
-          echo "Deployment has failed"
-        fi
+        aws ecs update-service --force-new-deployment --service $SERVICE_NAME --cluster $CLUSTER_NAME > /dev/null
+        echo "New Deployment has completed" 
