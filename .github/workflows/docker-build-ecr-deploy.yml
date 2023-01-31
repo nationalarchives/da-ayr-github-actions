@@ -1,10 +1,6 @@
 name: docker-build-and-ecr-deploy
 on:
   workflow_call:
-    inputs:
-      docker_image_name:
-        type: string
-        required: false
     secrets:
       AWS_ROLE:
         required: true
@@ -41,7 +37,11 @@ on:
       WEBAPP_DB_USER:
         required: true 
       AWS_ECR_AND_ECR_ROLE_ARN:
-        required: true 
+        required: true
+      CLUSTER_NAME:
+        required: true
+      SERVICE_NAME:
+        required: true
 permissions:
   id-token: write
   contents: read
@@ -152,7 +152,7 @@ jobs:
     - name: Deploy Image to ECS 
       id: ec-deploy-image
       env:
-        CLUSTER_NAME: ecs-cluster-dev
-        SERVICE_NAME: dev-ecs-service
+        CLUSTER_NAME: ${{ secrets.CLUSTER_NAME }}
+        SERVICE_NAME: ${{ secrets.SERVICE_NAME }}
       run: |
         aws ecs update-service --force-new-deployment --service $SERVICE_NAME --cluster $CLUSTER_NAME
