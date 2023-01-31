@@ -128,16 +128,16 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v1
       with:
         registries: ${{ secrets.AWS_REGISTRIES }}
-    # - name: Build, Tag and Push the Image to Amazon ECR
-    #   id: build-image
-    #   env:
-    #     ECR_REGISTRY: ${{ secrets.ECR_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-    #     ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
-    #     IMAGE_VERSION: ${{ steps.increament-get-tag.outputs.get-tag }}
-    #   run: |
-    #     docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
-    #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-    #     echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:latest"
+    - name: Build, Tag and Push the Image to Amazon ECR
+      id: build-image
+      env:
+        ECR_REGISTRY: ${{ secrets.ECR_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+        ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+        IMAGE_VERSION: ${{ steps.increament-get-tag.outputs.get-tag }}
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:latest"
     - name: Non Prod Role
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -149,21 +149,6 @@ jobs:
         aws-session-token: ${{ env.AWS_SESSION_TOKEN }}
         role-skip-session-tagging: true
         role-duration-seconds: 1200
-    # - name: Fill in the new image ID in the Amazon ECS task defintion 
-    #   id: task-def
-    #   uses: aws-actions/amazon-ecs-render-task-definition@v1
-    #   with:
-    #     task-definition: ${{ env.ECS_TASK_DEFINITION }}
-    #     container-name: ${{ env.CONTAINER_NAME }}
-    #     image: ${{ steps.build-image.outputs.image }}
-    
-    # - name: Deploy Amazon ECS Task Definition 
-    #   uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-    #   with:
-    #     task-definition: ${{ steps.task-def.outputs.task-definition }}
-    #     service: ${{ env.ECS_SERVICE }}
-    #     cluster: ${{ env.ECS_CLUSTER }}
-    #     wait-for-service-stability: true
     - name: Deploy Image to ECS 
       id: ec-deploy-image
       env:
