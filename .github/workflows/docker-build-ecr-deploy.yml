@@ -128,16 +128,16 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v1
       with:
         registries: ${{ secrets.AWS_REGISTRIES }}
-    - name: Build, Tag and Push the Image to Amazon ECR
-      id: build-image
-      env:
-        ECR_REGISTRY: ${{ secrets.ECR_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-        ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
-        IMAGE_VERSION: ${{ steps.increament-get-tag.outputs.get-tag }}
-      run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:latest"
+    # - name: Build, Tag and Push the Image to Amazon ECR
+    #   id: build-image
+    #   env:
+    #     ECR_REGISTRY: ${{ secrets.ECR_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+    #     ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+    #     IMAGE_VERSION: ${{ steps.increament-get-tag.outputs.get-tag }}
+    #   run: |
+    #     docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+    #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+    #     echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:latest"
     - name: Non Prod Role
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -171,5 +171,6 @@ jobs:
         SERVICE_NAME: dev-ecs-service
       run: |
         TASK_DEFINITION=`aws ecs describe-services --cluster $CLUSTER_NAME --services $SERVICE_NAME --query "services[].taskDefinition" --output text`
-        NEW_TASK_DEF=$(echo $TASK_DEFINITION | jq --arg IMAGE "image:tag" '.taskDefinition | .containerDefinitions[0].image = $IMAGE | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)')
+        NEW_TASK_DEF=`aws ecs register-task-definition --cli-input-json "$(aws ecs describe-task-definition --task-definition $TASK_DEFINITION)"`
         aws ecs update-service --cluster $CLUSTER_NAME --service $SERVICE_NAME --task-definition $NEW_TASK_DEF
+
