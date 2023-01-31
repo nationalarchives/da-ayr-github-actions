@@ -156,5 +156,3 @@ jobs:
         SERVICE_NAME: dev-ecs-service
       run: |
         aws ecs update-service --force-new-deployment --service $SERVICE_NAME --cluster $CLUSTER_NAME
-
-
