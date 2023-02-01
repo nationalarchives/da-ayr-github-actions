@@ -155,5 +155,5 @@ jobs:
         CLUSTER_NAME: ${{ secrets.CLUSTER_NAME }}
         SERVICE_NAME: ${{ secrets.SERVICE_NAME }}
       run: |
-        aws ecs update-service --force-new-deployment --service $SERVICE_NAME --cluster $CLUSTER_NAME
+        aws ecs update-service --force-new-deployment --service $SERVICE_NAME --cluster $CLUSTER_NAME > /dev/null
         echo "New Deployment has completed" 
