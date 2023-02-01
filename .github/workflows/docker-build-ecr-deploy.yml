@@ -135,7 +135,7 @@ jobs:
         ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
         IMAGE_VERSION: ${{ steps.increament-get-tag.outputs.get-tag }}
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+        docker build docker build --target=release -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:latest"
     - name: Non Prod Role
@@ -156,4 +156,4 @@ jobs:
         SERVICE_NAME: ${{ secrets.SERVICE_NAME }}
       run: |
         aws ecs update-service --force-new-deployment --service $SERVICE_NAME --cluster $CLUSTER_NAME > /dev/null
-        echo "New Deployment has completed" 
+        echo "New Deployment has completed"
