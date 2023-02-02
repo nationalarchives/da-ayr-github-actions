@@ -135,7 +135,7 @@ jobs:
         ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
         IMAGE_VERSION: ${{ steps.increament-get-tag.outputs.get-tag }}
       run: |
-        docker build docker build --target=release -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+        docker build --target=release -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:latest"
     - name: Non Prod Role
