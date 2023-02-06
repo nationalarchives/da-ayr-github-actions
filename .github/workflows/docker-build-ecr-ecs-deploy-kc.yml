@@ -51,11 +51,11 @@ jobs:
         aws-session-token: ${{ env.AWS_SESSION_TOKEN }}
         role-skip-session-tagging: true
         role-duration-seconds: 1200
-    - name: Retrieve Realm Json Fie
-      env:
-        TOKEN: ${{ secrets.PAT_TOKEN }}
-      run: | 
-        curl -H "Authorization: token ${TOKEN}" -o ayr-realm.json https://raw.githubusercontent.com/nationalarchives/da-ayr-configurations/main/keycloack/ayr-realm.json 
+    # - name: Retrieve Realm Json Fie
+    #   env:
+    #     TOKEN: ${{ secrets.PAT_TOKEN }}
+    #   run: | 
+    #     curl -H "Authorization: token ${TOKEN}" -o ayr-realm.json https://raw.githubusercontent.com/nationalarchives/da-ayr-configurations/main/keycloack/ayr-realm.json 
     - name: Check files in current directory
       run: |
         pwd
