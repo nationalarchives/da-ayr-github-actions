@@ -57,6 +57,12 @@ jobs:
           cp backend-config.auto.tfvars terraform/environments/dev
           cp terraform.tfvars terraform/environments/dev
           ls -alt
+
+      - name: Get Lambda Artefacts
+        id: lambda
+        run: |
+          aws s3 cp s3://da-ayr-lambda-functions-dev/lambda_auth.zip ../../../lambda
+          aws s3 cp s3://da-ayr-lambda-functions-dev/lambda_rest-api.zip ../../../lambda
           
       - name: Format Terraform
         id: fmt
