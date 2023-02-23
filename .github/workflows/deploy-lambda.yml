@@ -1,6 +1,5 @@
 
-
-name: Upload-sample-data-s3-bucket
+name: Package-Zip-Upload-Lambda
 on:
   workflow_call:
     secrets:
