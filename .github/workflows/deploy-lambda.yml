@@ -1,3 +1,5 @@
+
+
 name: Upload-sample-data-s3-bucket
 on:
   workflow_call:
@@ -10,7 +12,7 @@ on:
         required: true
       AWS_REGION:
         required: true
-      AWS_S3_LAMBDA_BUCKET:
+      AWS_S3_BUCKET:
         required: true
 permissions:
   id-token: write
@@ -40,9 +42,13 @@ jobs:
           aws-session-token: ${{ env.AWS_SESSION_TOKEN }}
           role-skip-session-tagging: true
           role-duration-seconds: 1200
-      - name: Package Auth Lambda
-         run: sh build.sh
-      - name: Upload file to S3 Bucket
+      - name: Zip up python
+        with:
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_LAMBDA_BUCKET }}
+        run: |
+          aws s3 cp sample-data/ s3://$AWS_S3_LAMBDA_BUCKET/ --recursive
+          
+      - name: Upload Artefact to S3
         with:
           AWS_S3_BUCKET: ${{ secrets.AWS_S3_LAMBDA_BUCKET }}
         run: |
