@@ -46,10 +46,5 @@ jobs:
         with:
           AWS_S3_BUCKET: ${{ secrets.AWS_S3_LAMBDA_BUCKET }}
         run: |
-          aws s3 cp sample-data/ s3://$AWS_S3_LAMBDA_BUCKET/ --recursive
-          
-      - name: Upload Artefact to S3
-        with:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_LAMBDA_BUCKET }}
-        run: |
-          aws s3 cp sample-data/ s3://$AWS_S3_LAMBDA_BUCKET/ --recursive
+          echo "aws s3 cp sample-data/ s3://$AWS_S3_LAMBDA_BUCKET/ --recursive"        
+
