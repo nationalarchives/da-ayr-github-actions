@@ -48,6 +48,8 @@ jobs:
           
       - name: Retrieve Build Parameters
         run: |
+          echo "Environment"
+          echo ${{ inputs.environment }}
           pwd
           ls
           cat /etc/os-release
