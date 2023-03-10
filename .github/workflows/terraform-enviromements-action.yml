@@ -20,110 +20,102 @@ permissions:
   id-token: write
   contents: read
   pull-requests: write
-# jobs:
-#   Deployment-Steps:
-#     runs-on: ubuntu-latest
-#     environment: ${{ inputs.environment }}
-#     steps:
+jobs:
+  Deployment-Steps:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
     
-#       - name: Setup Configs and Variables
-#         run: |
-#           pwd
-#           ls -la
+      - name: Setup Configs and Variables
+        run: |
+          pwd
+          ls -la
           
-#       - name: Checkout Repo
-#         uses: actions/checkout@v2
+      - name: Checkout Repo
+        uses: actions/checkout@v2
         
-#       - name: Configre AWS credentials
-#         uses: aws-actions/configure-aws-credentials@v1
-#         with:
-#           role-to-assume: ${{ secrets.AWS_ROLE }}
-#           aws-region: eu-west-2
-#           role-session-name: Github-OIDC-TERRAFROM
+      - name: Configre AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE }}
+          aws-region: eu-west-2
+          role-session-name: Github-OIDC-TERRAFROM
           
-#       - name: Setup Terraform
-#         uses: hashicorp/setup-terraform@v2
-#         with:
-#           terraform_version: 1.2.5
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.2.5
           
-#       - name: Retrieve Build Parameters
-#         run: |
-#           echo "Environment"
-#           echo ${{ inputs.environment }}
-#           pwd
-#           ls
-#           cat /etc/os-release
-#           lsb_release -a
-#           sh scripts/backend-tf.sh
-#           ls -alt 
-#           cp backend-config.auto.tfvars terraform/environments/dev
-#           cp terraform.tfvars terraform/environments/dev
-#           ls -alt
+      - name: Retrieve Build Parameters
+        run: |
+          echo "Environment"
+          echo ${{ inputs.environment }}
+          pwd
+          ls
+          cat /etc/os-release
+          lsb_release -a
+          sh scripts/backend-tf.sh
+          ls -alt 
+          cp backend-config.auto.tfvars terraform/environments/dev
+          cp terraform.tfvars terraform/environments/dev
+          ls -alt
 
-#       - name: Get Lambda Artefacts
-#         id: lambda
-#         run: |
-#           aws sts get-caller-identity
-#           aws s3 cp s3://da-ayr-lambda-functions-dev/lambda_auth.zip ./lambda
-#           aws s3 cp s3://da-ayr-lambda-functions-dev/lambda_rest_api.zip ./lambda
-#           aws s3 cp s3://da-ayr-lambda-functions-dev/lambda_bag_indexer.zip ./lambda
-#           aws s3 cp s3://da-ayr-lambda-functions-dev/lambda_bag_receiver.zip ./lambda
-#           aws s3 cp s3://da-ayr-lambda-functions-dev/lambda_bag_to_opensearch.zip ./lambda
-#           aws s3 cp s3://da-ayr-lambda-functions-dev/lambda_bag_unpacker.zip ./lambda
-#           aws s3 cp s3://da-ayr-lambda-functions-dev/lambda_bag_role_assigner.zip ./lambda
+      - name: Get Lambda Artefacts
+        id: lambda
+        run: |
+          aws sts get-caller-identity
+          aws s3 cp s3://da-ayr-lambda-functions-dev/lambda_auth.zip ./lambda
+          aws s3 cp s3://da-ayr-lambda-functions-dev/lambda_rest_api.zip ./lambda
+          aws s3 cp s3://da-ayr-lambda-functions-dev/lambda_bag_indexer.zip ./lambda
+          aws s3 cp s3://da-ayr-lambda-functions-dev/lambda_bag_receiver.zip ./lambda
+          aws s3 cp s3://da-ayr-lambda-functions-dev/lambda_bag_to_opensearch.zip ./lambda
+          aws s3 cp s3://da-ayr-lambda-functions-dev/lambda_bag_unpacker.zip ./lambda
+          aws s3 cp s3://da-ayr-lambda-functions-dev/lambda_bag_role_assigner.zip ./lambda
           
-#           pwd
-#           ls ./lambda | grep lambda_
+          pwd
+          ls ./lambda | grep lambda_
 
-#       - name: Format Terraform
-#         id: fmt
-#         run: terraform fmt #-check
-#         continue-on-error: true
+      - name: Format Terraform
+        id: fmt
+        run: terraform fmt #-check
+        continue-on-error: true
 
-#       - name: Initialize Terraform
-#         id: init
-# #        env: 
-# #         AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }} 
-# #         AWS_BUCKET_KEY_NAME: ${{ secrets.AWS_BUCKET_KEY_NAME }}
-#         run: |
-#           pwd
-#           cd terraform/environments/dev/
-#           pwd
-#           ls
+      - name: Initialize Terraform
+        id: init
+#        env: 
+#         AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }} 
+#         AWS_BUCKET_KEY_NAME: ${{ secrets.AWS_BUCKET_KEY_NAME }}
+        run: |
+          pwd
+          cd terraform/environments/dev/
+          pwd
+          ls
           
-#           #terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY_NAME}"
-#           terraform init -backend-config=backend-config.auto.tfvars -upgrade -reconfigure
-#           # terraform init -backend-config="bucket=da-ayr-tf-state" -backend-config="key=da-vpc/dev/terraform.tfstate"
-#       - name: Validate Terraform
-#         id: validate
-#         run: terraform validate -no-color
+          #terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY_NAME}"
+          terraform init -backend-config=backend-config.auto.tfvars -upgrade -reconfigure
+          # terraform init -backend-config="bucket=da-ayr-tf-state" -backend-config="key=da-vpc/dev/terraform.tfstate"
+      - name: Validate Terraform
+        id: validate
+        run: terraform validate -no-color
       
-#       - name: Terrafrom Plan
-#         id: plan
-#         run: |
-#           pwd
-#           ls
-#           cd terraform/environments/dev/
-#           terraform plan -lock=false
-#           terraform plan -lock=false -out plan.out -no-color 
-#         continue-on-error: true
-        
-# #       - name: Terraform Destroy
-# #         id: destroy
-# #         run: |
-# #            cd terraform/environments/dev/
-# #             terraform plan -lock=false -destroy -out destroy.out
-# #            terraform destroy -auto-approve -lock=false
-        
-#       - name: Terraform Plan Status
-#         id: if_plan_error
-#         if: steps.plan.outcome =='failure'
-#         run: exit 1
+      - name: Terrafrom Plan
+        id: plan
+        run: |
+          pwd
+          ls
+          cd terraform/environments/dev/
+          terraform plan -lock=false
+          terraform plan -lock=false -out plan.out -no-color 
+        continue-on-error: true        
+      - name: Terraform Plan Status
+        id: if_plan_error
+        if: steps.plan.outcome =='failure'
+        run: exit 1
 
-#       - name: Terrafrom Apply
-#         id: apply
-#         if: github.ref == 'refs/heads/main' && github.event_name == 'push' || github.ref == 'refs/heads/dev' && github.event_name == 'push'
-#         run: | 
-#           aws sts get-caller-identity
-#           cd terraform/environments/dev/
-#           terraform apply -lock=false -auto-approve -input=false
+      - name: Terrafrom Apply
+        id: apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push' || github.ref == 'refs/heads/dev' && github.event_name == 'push'
+        run: | 
+          aws sts get-caller-identity
+          cd terraform/environments/dev/
+          terraform apply -lock=false -auto-approve -input=false
